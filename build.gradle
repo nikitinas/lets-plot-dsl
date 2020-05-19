@@ -39,12 +39,10 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib"
     compile "org.jetbrains.kotlin:kotlin-reflect"
 
-    compile 'org.jetbrains.kotlin:krangl:0.12'
+    compile 'org.jetbrains.kotlin:krangl-typed:0.0.4'
 
     compile 'org.jetbrains.lets-plot:lets-plot-common:1.1.2-SNAPSHOT'
-    compile 'org.jetbrains.lets-plot:lets-plot-jfx:1.1.2-SNAPSHOT'
-    compile 'org.jetbrains.lets-plot:lets-plot-kotlin-api:0.0.8-SNAPSHOT'
-    compile 'org.jetbrains.lets-plot:kotlin-frontend-api:0.0.8-SNAPSHOT'
+    compile 'org.jetbrains.lets-plot:lets-plot-kotlin-api:0.0.10-SNAPSHOT'
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile 'io.kotlintest:kotlintest-assertions:3.1.6'
@@ -96,7 +94,7 @@ dokka {
 }
 
 group 'org.jetbrains.kotlin'
-version '0.0.3'
+version '0.0.11'
 
 artifacts {
     archives sourcesJar
@@ -126,7 +124,7 @@ if (hasProperty('bintray_user') && hasProperty('bintray_key')) {
         pkg {
             repo = 'kotlin-datascience'
             name = 'lets-plot-dsl'
-            vcsUrl = 'https://github.com/nikitinas/krangl-typed'
+            vcsUrl = 'https://github.com/nikitinas/lets-plot-dsl'
             userOrg = 'kotlin'
             licenses = ['MIT']
             publicDownloadNumbers = true
