@@ -166,6 +166,8 @@ class PlotBuilder<T>(data: DataBindings<T>) : GenericBuilder<T>(data) {
 
     private val otherFeatures = mutableListOf<OtherPlotFeature>()
 
+    private val otherScales = mutableListOf<Scale>()
+
     private fun collectScales() =
             properties.mapNotNull { (it.value as? ScaleableProperty<T,*>)?.scale }
 
@@ -180,10 +182,12 @@ class PlotBuilder<T>(data: DataBindings<T>) : GenericBuilder<T>(data) {
             Option.Meta.KIND to PLOT,
             Option.Plot.LAYERS to layers.map { it.getSpec() },
             Option.Plot.DATA to bindings.dataSource,
-            Option.Plot.SCALES to collectScales().map { it.toSpec() }
+            Option.Plot.SCALES to (collectScales() + otherScales).map { it.toSpec() }
     ) + otherFeatures.map { it.kind to it.toSpec()}
 
     operator fun OtherPlotFeature.unaryPlus() {otherFeatures.add(this)}
+
+    operator fun Scale.unaryPlus() {otherScales.add(this)}
 }
 
 fun PlotBuilder<*>.size(width: Int, height: Int) =
