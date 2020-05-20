@@ -8,7 +8,6 @@ package org.jetbrains.kotlin.letsPlot
 import jetbrains.datalore.plot.base.Aes
 import jetbrains.datalore.plot.config.Option
 import jetbrains.datalore.plot.config.Option.Meta.Kind.PLOT
-import jetbrains.datalore.plot.config.Option.Scale.AES
 import jetbrains.datalore.plot.config.Option.Scale.DATE_TIME
 import jetbrains.letsPlot.Pos
 import jetbrains.letsPlot.Stat
@@ -46,34 +45,36 @@ class BindingsManager {
 
 }
 
-fun <C,T,P: BindableProperty<C,T>> P.set(values: Iterable<T>): P {
+fun <C, T, P : BindableProperty<C, T>> P.set(values: Iterable<T>): P {
     this.values = values
     return this
 }
 
-fun <C,T,P: BindableProperty<C,T>> P.map(mapping: Getter<C, T>): P {
+fun <C, T, P : BindableProperty<C, T>> P.map(mapping: Getter<C, T>): P {
     this.mapping = mapping
     return this
 }
 
-operator fun <C,T,P: BindableProperty<C,T>> P.invoke(mapping: Getter<C, T>) = map(mapping)
+operator fun <C, T, P : BindableProperty<C, T>> P.invoke(mapping: Getter<C, T>) = map(mapping)
 
-infix fun <C,T,P: BindableProperty<C,T>> P.to(mapping: Getter<C, T>) = map(mapping)
+infix fun <C, T, P : BindableProperty<C, T>> P.to(mapping: Getter<C, T>) = map(mapping)
 
-infix fun <C,T,P: BindableProperty<C,T>> P.of(mapping: Getter<C, T>) = map(mapping)
+infix fun <C, T, P : BindableProperty<C, T>> P.of(mapping: Getter<C, T>) = map(mapping)
 
-operator fun <C,T,P: BindableProperty<C,T>> P.invoke(values: Iterable<T>) = set(values)
+operator fun <C, T, P : BindableProperty<C, T>> P.invoke(values: Iterable<T>) = set(values)
 
-operator fun <C,T,P: BindableProperty<C,T>> P.minus(mapping: Getter<C, T>) = map(mapping)
+operator fun <C, T, P : BindableProperty<C, T>> P.minus(mapping: Getter<C, T>) = map(mapping)
 
 open class BindableProperty<C, T>(val name: String) {
 
     var mapping: Getter<C, T>? = null
 
     var values: Iterable<T>? = null
+
+    val isInitialized get() = mapping != null || values != null
 }
 
-class ScaleableProperty<C,T>(name: String, val aes: Aes<*>) : BindableProperty<C,T>(name) {
+class ScaleableProperty<C, T>(name: String, val aes: Aes<*>) : BindableProperty<C, T>(name) {
 
     var scale: Scale? = null
 
@@ -95,7 +96,109 @@ class ScaleableProperty<C,T>(name: String, val aes: Aes<*>) : BindableProperty<C
         )
     }
 
+    fun hue(
+            h: Int? = null,
+            c: Int? = null,
+            l: Int? = null,
+            h_start: Int? = null,
+            direction: Int? = null,
+            name: String? = null,
+            breaks: List<Any>? = null,
+            labels: List<String>? = null,
+            limits: List<Any>? = null,
+            expand: Any? = null,
+            na_value: Any? = null,
+            guide: Any? = null,
+            trans: Any? = null) {
+        scale = Scale(
+                aes,
+                name, breaks, labels, limits, expand, na_value, guide, trans,
+                Options(
+                        mapOf(
+                                Option.Scale.HUE_RANGE to h,
+                                Option.Scale.CHROMA to c,
+                                Option.Scale.LUMINANCE to l,
+                                Option.Scale.START_HUE to h_start,
+                                Option.Scale.DIRECTION to direction,
+                                Option.Scale.SCALE_MAPPER_KIND to "color_hue"
+                        )
+                ))
+    }
 
+    fun grey(
+            start: Int?, end: Int?, direction: Int?,  // start, end: [0..100]. direction < 0 - reversed
+            name: String? = null,
+            breaks: List<Any>? = null,
+            labels: List<String>? = null,
+            limits: List<Any>? = null,
+            expand: Any? = null,
+            na_value: Any? = null,
+            guide: Any? = null,
+            trans: Any? = null
+    ) {
+        scale = Scale(
+                aes,
+                name, breaks, labels, limits, expand, na_value, guide, trans,
+                Options(
+                        mapOf(
+                                Option.Scale.START to start,
+                                Option.Scale.END to end,
+                                Option.Scale.DIRECTION to direction,
+                                Option.Scale.SCALE_MAPPER_KIND to "color_grey"
+                        )
+                )
+        )
+    }
+
+    fun gradient(
+            low: String, high: String,
+            name: String? = null,
+            breaks: List<Any>? = null,
+            labels: List<String>? = null,
+            limits: List<Any>? = null,
+            expand: Any? = null,
+            na_value: Any? = null,
+            guide: Any? = null,
+            trans: Any? = null
+    ) {
+        scale = Scale(
+                aes,
+                name, breaks, labels, limits, expand, na_value, guide, trans,
+                Options(
+                        mapOf(
+                                Option.Scale.LOW to low,
+                                Option.Scale.HIGH to high,
+                                Option.Scale.SCALE_MAPPER_KIND to "color_gradient"
+                        )
+                )
+        )
+    }
+
+    fun gradient2(
+            low: String, mid: String, high: String, midpoint: Double = 0.0,
+            name: String? = null,
+            breaks: List<Any>? = null,
+            labels: List<String>? = null,
+            limits: List<Any>? = null,
+            expand: Any? = null,
+            na_value: Any? = null,
+            guide: Any? = null,
+            trans: Any? = null
+    ) {
+        scale = Scale(
+                aes,
+                name, breaks, labels, limits, expand, na_value, guide, trans,
+                Options(
+                        mapOf(
+                                Option.Scale.LOW to low,
+                                Option.Scale.HIGH to high,
+                                Option.Scale.MID to mid,
+                                Option.Scale.MIDPOINT to midpoint,
+                                Option.Scale.SCALE_MAPPER_KIND to "color_gradient2"
+                        )
+                )
+        )
+    }
 }
 
 class WriteableProperty<C, T>(name: String) : BindableProperty<C, T>(name) {
@@ -114,7 +217,7 @@ class WriteableProperty<C, T>(name: String) : BindableProperty<C, T>(name) {
         set(value)
     }
 
-    operator fun compareTo(value: T): Int{
+    operator fun compareTo(value: T): Int {
         set(value)
         return 0
     }
@@ -126,7 +229,7 @@ class WriteableProperty<C, T>(name: String) : BindableProperty<C, T>(name) {
 
 open class BuilderBase<T>(val bindings: DataBindings<T>) {
 
-    class PropertyProvider<C, T, P: BindableProperty<C,T>>(private val owner: BuilderBase<C>, val create: (String)->P) {
+    class PropertyProvider<C, T, P : BindableProperty<C, T>>(private val owner: BuilderBase<C>, val create: (String) -> P) {
         operator fun getValue(thisRef: Any?, property: KProperty<*>): P {
             return owner.properties.getOrPut(property.name) { create(property.name) } as P
         }
@@ -136,18 +239,18 @@ open class BuilderBase<T>(val bindings: DataBindings<T>) {
 
     internal val properties = mutableMapOf<String, BindableProperty<T, *>>()
 
-    protected fun <P> prop() = PropertyProvider<T, P, WriteableProperty<T,P>>(this){WriteableProperty(it)}
+    protected fun <P> prop() = PropertyProvider<T, P, WriteableProperty<T, P>>(this) { WriteableProperty(it) }
 
-    protected fun <P> bindProp() = PropertyProvider<T, P, BindableProperty<T,P>>(this){BindableProperty(it)}
+    protected fun <P> bindProp() = PropertyProvider<T, P, BindableProperty<T, P>>(this) { BindableProperty(it) }
 
-    protected fun <P> scaleProp(aes: Aes<*>) = PropertyProvider<T, P, ScaleableProperty<T,P>>(this){ ScaleableProperty(it, aes) }
+    protected fun <P> scaleProp(aes: Aes<*>) = PropertyProvider<T, P, ScaleableProperty<T, P>>(this) { ScaleableProperty(it, aes) }
 
     fun <P> map(selector: Getter<T, P>) = selector
 
     internal open fun getSpec(): Map<String, Any> = collectParameters() + (Option.Plot.MAPPING to collectMappings())
 
     private fun collectParameters() =
-            properties.mapValues { (it.value as? WriteableProperty<T,*>)?.constValue }
+            properties.mapValues { (it.value as? WriteableProperty<T, *>)?.constValue }
                     .filterNonNullValues()
 
     private fun collectMappings() =
@@ -169,7 +272,7 @@ class PlotBuilder<T>(data: DataBindings<T>) : GenericBuilder<T>(data) {
     private val otherScales = mutableListOf<Scale>()
 
     private fun collectScales() =
-            properties.mapNotNull { (it.value as? ScaleableProperty<T,*>)?.scale }
+            properties.mapNotNull { (it.value as? ScaleableProperty<T, *>)?.scale }
 
     internal fun <C, B : BuilderBase<C>> addLayer(builder: B, body: B.() -> Unit) {
         layers.add(builder)
@@ -178,16 +281,25 @@ class PlotBuilder<T>(data: DataBindings<T>) : GenericBuilder<T>(data) {
 
     internal fun <C> createContext(data: Iterable<C>) = LayerContext<C>(bindings.getManager(data), this)
 
+    private fun collectLayers() = if (layers.isNotEmpty()) layers
+    else if (x.isInitialized && y.isInitialized) listOf(PointsLayer(createContext(data)))
+    else if (x.isInitialized) listOf(BarsLayer(createContext(data)))
+    else emptyList()
+
     override fun getSpec() = super.getSpec() + mapOf(
             Option.Meta.KIND to PLOT,
-            Option.Plot.LAYERS to layers.map { it.getSpec() },
+            Option.Plot.LAYERS to collectLayers().map { it.getSpec() },
             Option.Plot.DATA to bindings.dataSource,
             Option.Plot.SCALES to (collectScales() + otherScales).map { it.toSpec() }
-    ) + otherFeatures.map { it.kind to it.toSpec()}
+    ) + otherFeatures.map { it.kind to it.toSpec() }
 
-    operator fun OtherPlotFeature.unaryPlus() {otherFeatures.add(this)}
+    operator fun OtherPlotFeature.unaryPlus() {
+        otherFeatures.add(this)
+    }
 
-    operator fun Scale.unaryPlus() {otherScales.add(this)}
+    operator fun Scale.unaryPlus() {
+        otherScales.add(this)
+    }
 }
 
 fun PlotBuilder<*>.size(width: Int, height: Int) =
@@ -261,8 +373,8 @@ open class LayerBuilder<T>(
 
 open class GenericBuilder<T>(bindings: DataBindings<T>) : BuilderBase<T>(bindings) {
     val alpha by prop<Double>()
-    val color by prop<String>()
-    val fill by prop<String>()
+    val color by scaleProp<Any>(Aes.COLOR)
+    val fill by scaleProp<Any>(Aes.FILL)
 }
 
 open class XYNumbersLayer<T>(
@@ -328,7 +440,7 @@ class HistogramLayer<T>(context: LayerContext<T>) :
     val size by prop<Double>()
 }
 
-fun <T> Iterable<T>.lets_plot(body: PlotBuilder<T>.() -> Unit): PlotSpec {
+fun <T> Iterable<T>.plot(body: PlotBuilder<T>.() -> Unit): PlotSpec {
     val bindings = BindingsManager()
     val builder = PlotBuilder(bindings.getManager(this))
     body(builder)
@@ -339,15 +451,16 @@ data class PlotSpec(val spec: MutableMap<String, Any>)
 
 fun test() {
     val data = listOf(1 to 2, 2 to 3)
-    data.lets_plot {
+    data.plot {
         x { first }.datetime("date")
         line {
             x { first }
             y to "a"
+            color { first }
         }
         bars {
             stat = density
         }
-        +ggsize(100,10)
+        +ggsize(100, 10)
     }
 }
