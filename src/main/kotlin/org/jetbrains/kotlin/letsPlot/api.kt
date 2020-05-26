@@ -21,27 +21,38 @@ typealias Getter<C, T> = C.(C) -> T
 
 typealias Mapping<T> = Getter<T, Any?>
 
-class DataBindings<T>(val data: Iterable<T>, val owner: BindingsManager) {
+interface MappingNameProvider {
+
+    fun <T> getName(data: Iterable<T>, mapping: Mapping<T>): String
+}
+
+class DefaultMappingNameProvider: MappingNameProvider {
+
+    private var counter = 0
+
+    override fun <T> getName(data: Iterable<T>, mapping: Mapping<T>) =
+        "list${counter++}"
+}
+
+class DataBindings<T>(val data: Iterable<T>, private val owner: BindingsManager, private val nameProvider: MappingNameProvider) {
 
     private val names = mutableMapOf<Mapping<T>, String>()
 
-    private var isFinalized = false
-
-    fun getDataName(mapping: Mapping<T>) =
-            names.getOrPut(mapping, { if (isFinalized) throw Exception() else "list${names.size}" })
+    fun getDataName(mapping: Mapping<T>) = names.getOrPut(mapping) {nameProvider.getName(data, mapping)}
 
     fun <C> getManager(values: Iterable<C>) = owner.getManager(values)
 
     val dataSource by lazy {
-        names.map { it.value to data.map { v -> it.key(v, v) } }.toMap().also { isFinalized = true }
+        names.map { it.value to data.map { v -> it.key(v, v) } }.toMap()
     }
 }
 
-class BindingsManager {
+class BindingsManager(private val nameProvider: MappingNameProvider) {
 
     private val bindingsMap = mutableMapOf<Iterable<*>, DataBindings<*>>()
+
     fun <T> getManager(data: Iterable<T>) =
-            bindingsMap.getOrPut(data, { DataBindings(data, this) }) as DataBindings<T>
+            bindingsMap.getOrPut(data, { DataBindings(data, this, nameProvider) }) as DataBindings<T>
 
 }
 
@@ -440,8 +451,10 @@ class HistogramLayer<T>(context: LayerContext<T>) :
     val size by prop<Double>()
 }
 
-fun <T> Iterable<T>.plot(body: PlotBuilder<T>.() -> Unit): PlotSpec {
-    val bindings = BindingsManager()
+fun <T> Iterable<T>.plot(body: PlotBuilder<T>.() -> Unit) = plot(DefaultMappingNameProvider(), body)
+
+fun <T> Iterable<T>.plot(nameProvider: MappingNameProvider, body: PlotBuilder<T>.() -> Unit): PlotSpec {
+    val bindings = BindingsManager(nameProvider)
     val builder = PlotBuilder(bindings.getManager(this))
     body(builder)
     return PlotSpec(builder.getSpec().toMutableMap())
