@@ -39,7 +39,7 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib"
     compile "org.jetbrains.kotlin:kotlin-reflect"
 
-    compile 'org.jetbrains.kotlin:krangl-typed:0.0.4'
+    compile 'org.jetbrains.kotlin:krangl-typed:0.0.6-dev-5'
 
     compile 'org.jetbrains.lets-plot:lets-plot-common:1.1.2-SNAPSHOT'
     compile 'org.jetbrains.lets-plot:lets-plot-kotlin-api:0.0.10-SNAPSHOT'
@@ -94,7 +94,7 @@ dokka {
 }
 
 group 'org.jetbrains.kotlin'
-version '0.0.10-dev3'
+version '0.0.10-dev-8'
 
 artifacts {
     archives sourcesJar
