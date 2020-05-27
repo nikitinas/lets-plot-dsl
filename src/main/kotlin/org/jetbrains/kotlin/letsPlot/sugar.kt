@@ -32,6 +32,7 @@ fun <T> Iterable<T>.plotLine(body: LinesLayer<T>.() -> Unit) = plot {
     line(body)
 }
 
-fun <T:Number> Iterable<T>.plotY(getY: (T)->Any) = plotLines {
+fun <T:Number> Iterable<T>.plotY(getY: (T)->Any) = plotLine {
+    x { it }
     y.map(getY)
 }
