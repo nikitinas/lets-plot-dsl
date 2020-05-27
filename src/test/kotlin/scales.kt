@@ -1,12 +1,9 @@
 import io.kotlintest.shouldBe
-import jetbrains.datalore.plot.config.Option
-import jetbrains.letsPlot.intern.GeomKind
-import jetbrains.letsPlot.intern.StatKind
-import jetbrains.letsPlot.scale.scale_color_hue
 import jetbrains.letsPlot.scale.scale_fill_hue
-import org.jetbrains.kotlin.letsPlot.*
+import org.jetbrains.kotlin.letsPlot.bars
+import org.jetbrains.kotlin.letsPlot.invoke
+import org.jetbrains.kotlin.letsPlot.plot
 import org.junit.Test
-import java.time.*
 
 class scales {
 
