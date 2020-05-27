@@ -50,7 +50,7 @@ fun <T> TypedDataFrame<T>.plotHlines(body: HLinesLayer<TypedDataFrameRow<T>>.() 
     hlines(body)
 }
 
-fun <T> TypedDataFrame<T>.plotLines(body: LinesLayer<TypedDataFrameRow<T>>.() -> Unit) = plot {
+fun <T> TypedDataFrame<T>.plotLine(body: LinesLayer<TypedDataFrameRow<T>>.() -> Unit) = plot {
     line(body)
 }
 

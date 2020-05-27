@@ -28,7 +28,7 @@ fun <T> Iterable<T>.plotHlines(body: HLinesLayer<T>.() -> Unit) = plot {
     hlines(body)
 }
 
-fun <T> Iterable<T>.plotLines(body: LinesLayer<T>.() -> Unit) = plot {
+fun <T> Iterable<T>.plotLine(body: LinesLayer<T>.() -> Unit) = plot {
     line(body)
 }
 
