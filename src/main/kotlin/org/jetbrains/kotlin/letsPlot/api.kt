@@ -16,10 +16,6 @@ import jetbrains.letsPlot.ggsize
 import jetbrains.letsPlot.intern.*
 import jetbrains.letsPlot.intern.layer.PosOptions
 import jetbrains.letsPlot.intern.layer.StatOptions
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
-import java.time.ZoneId
 import kotlin.reflect.KProperty
 
 typealias Getter<C, T> = C.(C) -> T
@@ -31,19 +27,19 @@ interface MappingNameProvider {
     fun <T> getName(data: Iterable<T>, mapping: Mapping<T>): String
 }
 
-class DefaultMappingNameProvider: MappingNameProvider {
+class DefaultMappingNameProvider : MappingNameProvider {
 
     private var counter = 0
 
     override fun <T> getName(data: Iterable<T>, mapping: Mapping<T>) =
-        "list${counter++}"
+            "list${counter++}"
 }
 
 class DataBindings<T>(val data: Iterable<T>, private val owner: BindingsManager, private val nameProvider: MappingNameProvider) {
 
     private val names = mutableMapOf<Mapping<T>, String>()
 
-    fun getDataName(mapping: Mapping<T>) = names.getOrPut(mapping) {nameProvider.getName(data, mapping)}
+    fun getDataName(mapping: Mapping<T>) = names.getOrPut(mapping) { nameProvider.getName(data, mapping) }
 
     fun <C> getManager(values: Iterable<C>) = owner.getManager(values)
 
@@ -68,6 +64,11 @@ fun <C, T, P : BindableProperty<C, T>> P.set(values: Iterable<T>): P {
 
 fun <C, T, P : BindableProperty<C, T>> P.map(mapping: Getter<C, T>): P {
     this.mapping = mapping
+    return this
+}
+
+fun <C, T, P : BindableProperty<C, T>> P.map(mapping: (C) -> T): P {
+    this.mapping = { mapping(it) }
     return this
 }
 
@@ -287,8 +288,11 @@ class PlotBuilder<T>(data: DataBindings<T>) : GenericBuilder<T>(data) {
 
     private val otherScales = mutableListOf<Scale>()
 
+    private val postProcessors = listOf(DateTimeAxisPostProcessor(), BarsStatPostProcessor())
+
     private fun collectScales() =
-            properties.mapNotNull { (it.value as? ScaleableProperty<T, *>)?.scale }
+            (layers.flatMap { it.properties.values } + properties.values).mapNotNull { (it as? ScaleableProperty<T, *>)?.scale }
+
 
     internal fun <C, B : BuilderBase<C>> addLayer(builder: B, body: B.() -> Unit) {
         layers.add(builder)
@@ -307,38 +311,8 @@ class PlotBuilder<T>(data: DataBindings<T>) : GenericBuilder<T>(data) {
             Option.Plot.LAYERS to collectLayers().map { it.getSpec() },
             Option.Plot.DATA to bindings.dataSource,
             Option.Plot.SCALES to (collectScales() + otherScales).map { it.toSpec() }
-    ) + otherFeatures.map { it.kind to it.toSpec() }).let(::postProcessSpec)
-
-    fun postProcessSpec(spec: Map<String, Any>): Map<String, Any> {
-        val data = spec[Option.Plot.DATA] as? Map<String, List<Any?>> ?: return spec
-        val timeLists = mutableListOf<String>()
-        val newData = data.map { (name, values) ->
-            val newValues: List<Any?> = when (values.firstOrNull()) {
-                null -> values
-                is LocalDate -> values.map { (it as? LocalDate)?.atStartOfDay()?.atZone(ZoneId.systemDefault())?.toEpochSecond()?.let { it * 1000 } }
-                        .also { timeLists.add(name) }
-                is LocalDateTime -> values.map { (it as? LocalDateTime)?.atZone(ZoneId.systemDefault())?.toEpochSecond()?.let { it * 1000 } }
-                        .also { timeLists.add(name) }
-                else -> values
-            }
-            (name to newValues)
-        }.toMap()
-
-        val timeAeses = ((spec[Option.Plot.LAYERS] as List<Map<String, Any>>) + spec)
-                .mapNotNull { it[Option.Plot.MAPPING] as? Map<String, String>}
-                .flatMap {
-                    it.mapNotNull {
-                        if(timeLists.contains(it.value)) it.key else null
-                    }
-                }
-
-        val newScales = spec[Option.Plot.SCALES] as List<Map<String, Any>> + timeAeses.map {
-            val s = HashMap<String, Any>()
-            s[AES] = it
-            s[DATE_TIME] = true
-            s
-        }
-        return spec + mapOf(Option.Plot.DATA to newData, Option.Plot.SCALES to newScales)
+    ) + otherFeatures.map { it.kind to it.toSpec() }).let {
+        postProcessors.fold(it) { spec, processor -> processor.process(spec) }
     }
 
     operator fun OtherPlotFeature.unaryPlus() {
@@ -458,7 +432,7 @@ class HLinesLayer<T>(context: LayerContext<T>) : LayerBuilder<T>(context, GeomKi
     val linetype by prop<String>()
 }
 
-class BarsLayer<T>(context: LayerContext<T>) : LayerBuilder<T>(context, GeomKind.BAR, stat = Stat.count(), position = Pos.stack) {
+class BarsLayer<T>(context: LayerContext<T>) : LayerBuilder<T>(context, GeomKind.BAR, position = Pos.stack) {
     val x by bindProp<Any>()
     val y by bindProp<Any>()
     val width by prop<Double>()

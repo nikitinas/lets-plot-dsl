@@ -13,7 +13,7 @@ import org.jetbrains.kotlin.letsPlot.plotBars
 import org.jetbrains.kotlin.letsPlot.plotPoints
 import org.junit.Test
 
-class DataFramePlotTests(){
+class dataFramePlotting(){
 
     val df = dataFrameOf("name", "age")(
             "Alice", 31,
