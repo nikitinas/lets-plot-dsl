@@ -8,6 +8,7 @@ package org.jetbrains.kotlin.letsPlot
 import jetbrains.datalore.plot.base.Aes
 import jetbrains.datalore.plot.config.Option
 import jetbrains.datalore.plot.config.Option.Meta.Kind.PLOT
+import jetbrains.datalore.plot.config.Option.Scale.AES
 import jetbrains.datalore.plot.config.Option.Scale.DATE_TIME
 import jetbrains.letsPlot.Pos
 import jetbrains.letsPlot.Stat
@@ -15,6 +16,10 @@ import jetbrains.letsPlot.ggsize
 import jetbrains.letsPlot.intern.*
 import jetbrains.letsPlot.intern.layer.PosOptions
 import jetbrains.letsPlot.intern.layer.StatOptions
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.ZoneId
 import kotlin.reflect.KProperty
 
 typealias Getter<C, T> = C.(C) -> T
@@ -297,12 +302,44 @@ class PlotBuilder<T>(data: DataBindings<T>) : GenericBuilder<T>(data) {
     else if (x.isInitialized) listOf(BarsLayer(createContext(data)))
     else emptyList()
 
-    override fun getSpec() = super.getSpec() + mapOf(
+    override fun getSpec() = (super.getSpec() + mapOf(
             Option.Meta.KIND to PLOT,
             Option.Plot.LAYERS to collectLayers().map { it.getSpec() },
             Option.Plot.DATA to bindings.dataSource,
             Option.Plot.SCALES to (collectScales() + otherScales).map { it.toSpec() }
-    ) + otherFeatures.map { it.kind to it.toSpec() }
+    ) + otherFeatures.map { it.kind to it.toSpec() }).let(::postProcessSpec)
+
+    fun postProcessSpec(spec: Map<String, Any>): Map<String, Any> {
+        val data = spec[Option.Plot.DATA] as? Map<String, List<Any?>> ?: return spec
+        val timeLists = mutableListOf<String>()
+        val newData = data.map { (name, values) ->
+            val newValues: List<Any?> = when (values.firstOrNull()) {
+                null -> values
+                is LocalDate -> values.map { (it as? LocalDate)?.atStartOfDay()?.atZone(ZoneId.systemDefault())?.toEpochSecond()?.let { it * 1000 } }
+                        .also { timeLists.add(name) }
+                is LocalDateTime -> values.map { (it as? LocalDateTime)?.atZone(ZoneId.systemDefault())?.toEpochSecond()?.let { it * 1000 } }
+                        .also { timeLists.add(name) }
+                else -> values
+            }
+            (name to newValues)
+        }.toMap()
+
+        val timeAeses = ((spec[Option.Plot.LAYERS] as List<Map<String, Any>>) + spec)
+                .mapNotNull { it[Option.Plot.MAPPING] as? Map<String, String>}
+                .flatMap {
+                    it.mapNotNull {
+                        if(timeLists.contains(it.value)) it.key else null
+                    }
+                }
+
+        val newScales = spec[Option.Plot.SCALES] as List<Map<String, Any>> + timeAeses.map {
+            val s = HashMap<String, Any>()
+            s[AES] = it
+            s[DATE_TIME] = true
+            s
+        }
+        return spec + mapOf(Option.Plot.DATA to newData, Option.Plot.SCALES to newScales)
+    }
 
     operator fun OtherPlotFeature.unaryPlus() {
         otherFeatures.add(this)
