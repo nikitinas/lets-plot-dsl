@@ -58,19 +58,10 @@ class DataFrameNameProvider: MappingNameProvider{
 
     private val defaultProvider = DefaultMappingNameProvider()
 
-    private val usedNames = mutableSetOf<String>()
-
-    override fun <T> getName(data: Iterable<T>, mapping: Mapping<T>): String {
-        val name = data.firstOrNull()?.let {
-            val columns = trackColumnAccess { mapping(it, it) }
-            if(columns.isEmpty()) defaultProvider.getName(data, mapping)
-            else columns.joinToString()
-        } ?: defaultProvider.getName(data, mapping)
-        var result = name
-        var counter = 2
-        while(usedNames.contains(result))
-            result = name + " (${counter++})"
-        usedNames.add(result)
-        return result
-    }
+    override fun <T> getName(data: Iterable<T>, mapping: Mapping<T>, propertyName: String) =
+            data.firstOrNull()?.let {
+                val columns = trackColumnAccess { mapping(it, it) }
+                if(columns.isEmpty()) defaultProvider.getName(data, mapping, propertyName)
+                else columns.joinToString()
+            } ?: defaultProvider.getName(data, mapping, propertyName)
 }

@@ -8,7 +8,6 @@ package org.jetbrains.kotlin.letsPlot
 import jetbrains.datalore.plot.base.Aes
 import jetbrains.datalore.plot.config.Option
 import jetbrains.datalore.plot.config.Option.Meta.Kind.PLOT
-import jetbrains.datalore.plot.config.Option.Scale.AES
 import jetbrains.datalore.plot.config.Option.Scale.DATE_TIME
 import jetbrains.letsPlot.Pos
 import jetbrains.letsPlot.Stat
@@ -24,22 +23,27 @@ typealias Mapping<T> = Getter<T, Any?>
 
 interface MappingNameProvider {
 
-    fun <T> getName(data: Iterable<T>, mapping: Mapping<T>): String
+    fun <T> getName(data: Iterable<T>, mapping: Mapping<T>, propertyName: String): String
 }
 
 class DefaultMappingNameProvider : MappingNameProvider {
 
-    private var counter = 0
-
-    override fun <T> getName(data: Iterable<T>, mapping: Mapping<T>) =
-            "list${counter++}"
+    override fun <T> getName(data: Iterable<T>, mapping: Mapping<T>, propertyName: String) = propertyName
 }
 
 class DataBindings<T>(val data: Iterable<T>, private val owner: BindingsManager, private val nameProvider: MappingNameProvider) {
 
     private val names = mutableMapOf<Mapping<T>, String>()
 
-    fun getDataName(mapping: Mapping<T>) = names.getOrPut(mapping) { nameProvider.getName(data, mapping) }
+    private fun makeUnique(name: String): String {
+        var res = name
+        var counter = 2
+        while(names.containsValue(res))
+            res = name + " (${counter++})"
+        return res
+    }
+
+    fun getDataName(mapping: Mapping<T>, propertyName: String) = names.getOrPut(mapping) { nameProvider.getName(data, mapping, propertyName).let(::makeUnique) }
 
     fun <C> getManager(values: Iterable<C>) = owner.getManager(values)
 
@@ -271,8 +275,8 @@ open class BuilderBase<T>(val bindings: DataBindings<T>) {
                     .filterNonNullValues()
 
     private fun collectMappings() =
-            properties.mapValues {
-                it.value.mapping?.let(bindings::getDataName)
+            properties.mapValues {prop ->
+                prop.value.mapping?.let{ bindings.getDataName(it, prop.key) }
             }.filterNonNullValues()
 
 }

@@ -8,8 +8,6 @@ import krangl.typed.TypedDataFrame
 import krangl.typed.TypedDataFrameRow
 import krangl.typed.typed
 import org.jetbrains.kotlin.letsPlot.invoke
-import org.jetbrains.kotlin.letsPlot.plot
-import org.jetbrains.kotlin.letsPlot.plotBars
 import org.jetbrains.kotlin.letsPlot.plotPoints
 import org.junit.Test
 

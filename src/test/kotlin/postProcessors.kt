@@ -63,7 +63,7 @@ class postProcessors{
         scales[2][Option.Scale.AES] shouldBe "x"
         val data = plot.spec[Option.Plot.DATA] as Map<String, List<Any>>
         data.size shouldBe 3
-        val x = data["list0"] as List<Long>
+        val x = data["x"] as List<Long>
         val zoneOffset = OffsetDateTime.now().offset
         val actualTimes = x.map { LocalDateTime.ofEpochSecond(it / 1000, 0, zoneOffset).toLocalDate() }
         actualTimes shouldBe times.map {it.second}

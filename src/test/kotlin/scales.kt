@@ -1,8 +1,10 @@
 import io.kotlintest.shouldBe
+import jetbrains.datalore.plot.config.Option
 import jetbrains.letsPlot.scale.scale_fill_hue
 import org.jetbrains.kotlin.letsPlot.bars
 import org.jetbrains.kotlin.letsPlot.invoke
 import org.jetbrains.kotlin.letsPlot.plot
+import org.jetbrains.kotlin.letsPlot.plotLine
 import org.junit.Test
 
 class scales {
@@ -27,5 +29,16 @@ class scales {
         }
 
         spec2 shouldBe spec1
+    }
+
+    @Test
+    fun scaleNames(){
+        val spec = (1..10).plotLine {
+            x{it}
+            y{it*it}
+        }.spec
+
+        val data = spec[Option.Plot.DATA] as Map<String, List<Any>>
+        data.keys.sorted() shouldBe listOf("x", "y")
     }
 }
