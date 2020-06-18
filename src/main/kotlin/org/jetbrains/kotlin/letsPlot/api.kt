@@ -71,8 +71,8 @@ fun <C, T, P : BindableProperty<C, T>> P.map(mapping: Getter<C, T>): P {
     return this
 }
 
-fun <C, T, P : BindableProperty<C, T>> P.map(mapping: (C) -> T): P {
-    this.mapping = { mapping(it) }
+fun <C, T, P : BindableProperty<C, T>> P.map(mapping: C.() -> T): P {
+    this.mapping = { mapping(this) }
     return this
 }
 
