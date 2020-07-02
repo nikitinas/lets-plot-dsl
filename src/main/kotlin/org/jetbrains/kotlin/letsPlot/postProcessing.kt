@@ -13,20 +13,19 @@ interface SpecPostProcessor {
     fun process(spec: Map<String, Any>): Map<String, Any>
 }
 
-class BarsStatPostProcessor: SpecPostProcessor {
+class BarsStatPostProcessor : SpecPostProcessor {
     override fun process(spec: Map<String, Any>): Map<String, Any> {
         val generalYMapping = (spec[Option.Plot.MAPPING] as? Map<String, String>)?.get(Aes.Y.name)
         val newLayers = (spec[Option.Plot.LAYERS] as? List<Map<String, Any>>)?.map {
             val geom = it[Option.Layer.GEOM] as? String
-            if(geom != null && geom == GeomKind.BAR.optionName()){
+            if (geom != null && geom == GeomKind.BAR.optionName()) {
                 val yMapping = (it[Option.Plot.MAPPING] as? Map<String, String>)?.get(Aes.Y.name)
                 val stat = it[Option.Layer.STAT] as? String
-                if(yMapping == null && generalYMapping == null && (stat == null || stat == StatKind.IDENTITY.optionName()))
-                {
+                if (yMapping == null && generalYMapping == null && (stat == null || stat == StatKind.IDENTITY.optionName())) {
                     val layer = it + mapOf(Option.Layer.STAT to StatKind.COUNT.optionName())
                     layer
-                }else it
-            }else it
+                } else it
+            } else it
         }.orEmpty()
         return spec + mapOf(Option.Plot.LAYERS to newLayers)
     }

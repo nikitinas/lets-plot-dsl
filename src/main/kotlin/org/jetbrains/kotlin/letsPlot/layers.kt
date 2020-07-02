@@ -6,50 +6,7 @@ import jetbrains.letsPlot.intern.GeomKind
 import jetbrains.letsPlot.intern.layer.PosOptions
 import jetbrains.letsPlot.intern.layer.StatOptions
 
-fun <T> PlotBuilder<*>.line(data: Iterable<T>, body: LinesLayer<T>.() -> Unit) =
-        addLayer(LinesLayer(createContext(data)), body)
-
-fun <T> PlotBuilder<T>.line(body: LinesLayer<T>.() -> Unit = {}) = line(data, body)
-
-fun <T> PlotBuilder<*>.points(data: Iterable<T>, body: PointsLayer<T>.() -> Unit) =
-        addLayer(PointsLayer(createContext(data)), body)
-
-fun <T> PlotBuilder<T>.points(body: PointsLayer<T>.() -> Unit = {}) = points(data, body)
-
-fun <T> PlotBuilder<*>.vlines(data: Iterable<T>, body: VLinesLayer<T>.() -> Unit) =
-        addLayer(VLinesLayer(createContext(data)), body)
-
-fun <T> PlotBuilder<T>.vlines(body: VLinesLayer<T>.() -> Unit = {}) = vlines(data, body)
-
-fun <T> PlotBuilder<*>.hlines(data: Iterable<T>, body: HLinesLayer<T>.() -> Unit) =
-        addLayer(HLinesLayer(createContext(data)), body)
-
-fun <T> PlotBuilder<T>.hlines(body: HLinesLayer<T>.() -> Unit = {}) = hlines(data, body)
-
-fun <T> PlotBuilder<*>.bars(data: Iterable<T>, body: BarsLayer<T>.() -> Unit) =
-        addLayer(BarsLayer(createContext(data)), body)
-
-fun <T> PlotBuilder<T>.bars(body: BarsLayer<T>.() -> Unit = {}) = bars(data, body)
-
-fun <T> PlotBuilder<*>.area(data: Iterable<T>, body: AreaLayer<T>.() -> Unit) =
-        addLayer(AreaLayer(createContext(data)), body)
-
-fun <T> PlotBuilder<T>.area(body: AreaLayer<T>.() -> Unit = {}) = area(data, body)
-
-fun <T> PlotBuilder<*>.density(data: Iterable<T>, body: DensityLayer<T>.() -> Unit) =
-        addLayer(DensityLayer(createContext(data)), body)
-
-fun <T> PlotBuilder<T>.density(body: DensityLayer<T>.() -> Unit = {}) = density(data, body)
-
-fun <T> PlotBuilder<*>.histogram(data: Iterable<T>, body: HistogramLayer<T>.() -> Unit) =
-        addLayer(HistogramLayer(createContext(data)), body)
-
-fun <T> PlotBuilder<T>.histogram(body: HistogramLayer<T>.() -> Unit = {}) = histogram(data, body)
-
 data class LayerContext<T>(val bindingsManager: DataBindings<T>, val plot: PlotBuilder<*>)
-
-
-
 
 open class XYNumbersLayer<T>(
         context: LayerContext<T>, geomKind: GeomKind, stat: StatOptions = Stat.identity,
@@ -113,3 +70,43 @@ class HistogramLayer<T>(context: LayerContext<T>) :
     val width by prop<Double>()
     val size by prop<Double>()
 }
+
+fun <T> PlotBuilder<*>.line(data: Iterable<T>, body: LinesLayer<T>.() -> Unit) =
+        addLayer(LinesLayer(createContext(data)), body)
+
+fun <T> PlotBuilder<T>.line(body: LinesLayer<T>.() -> Unit = {}) = line(data, body)
+
+fun <T> PlotBuilder<*>.points(data: Iterable<T>, body: PointsLayer<T>.() -> Unit) =
+        addLayer(PointsLayer(createContext(data)), body)
+
+fun <T> PlotBuilder<T>.points(body: PointsLayer<T>.() -> Unit = {}) = points(data, body)
+
+fun <T> PlotBuilder<*>.vlines(data: Iterable<T>, body: VLinesLayer<T>.() -> Unit) =
+        addLayer(VLinesLayer(createContext(data)), body)
+
+fun <T> PlotBuilder<T>.vlines(body: VLinesLayer<T>.() -> Unit = {}) = vlines(data, body)
+
+fun <T> PlotBuilder<*>.hlines(data: Iterable<T>, body: HLinesLayer<T>.() -> Unit) =
+        addLayer(HLinesLayer(createContext(data)), body)
+
+fun <T> PlotBuilder<T>.hlines(body: HLinesLayer<T>.() -> Unit = {}) = hlines(data, body)
+
+fun <T> PlotBuilder<*>.bars(data: Iterable<T>, body: BarsLayer<T>.() -> Unit) =
+        addLayer(BarsLayer(createContext(data)), body)
+
+fun <T> PlotBuilder<T>.bars(body: BarsLayer<T>.() -> Unit = {}) = bars(data, body)
+
+fun <T> PlotBuilder<*>.area(data: Iterable<T>, body: AreaLayer<T>.() -> Unit) =
+        addLayer(AreaLayer(createContext(data)), body)
+
+fun <T> PlotBuilder<T>.area(body: AreaLayer<T>.() -> Unit = {}) = area(data, body)
+
+fun <T> PlotBuilder<*>.density(data: Iterable<T>, body: DensityLayer<T>.() -> Unit) =
+        addLayer(DensityLayer(createContext(data)), body)
+
+fun <T> PlotBuilder<T>.density(body: DensityLayer<T>.() -> Unit = {}) = density(data, body)
+
+fun <T> PlotBuilder<*>.histogram(data: Iterable<T>, body: HistogramLayer<T>.() -> Unit) =
+        addLayer(HistogramLayer(createContext(data)), body)
+
+fun <T> PlotBuilder<T>.histogram(body: HistogramLayer<T>.() -> Unit = {}) = histogram(data, body)

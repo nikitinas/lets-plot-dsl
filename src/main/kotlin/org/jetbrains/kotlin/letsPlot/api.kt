@@ -43,9 +43,9 @@ fun <T> Iterable<T>.plotLine(body: LinesLayer<T>.() -> Unit) = plot {
     line(body)
 }
 
-class XAccessor<T: Number>(val x: T)
+class XAccessor<T : Number>(val x: T)
 
-fun <T:Number> Iterable<T>.plotY(getY: XAccessor<T>.(T)->Any) = plotLine {
+fun <T : Number> Iterable<T>.plotY(getY: XAccessor<T>.(T) -> Any) = plotLine {
     x { it }
-    y {getY(XAccessor(it), it)}
+    y { getY(XAccessor(it), it) }
 }

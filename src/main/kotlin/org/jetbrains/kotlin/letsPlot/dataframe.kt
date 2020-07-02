@@ -3,7 +3,8 @@ package org.jetbrains.kotlin.letsPlot
 import jetbrains.letsPlot.geom.geom_bar
 import jetbrains.letsPlot.geom.geom_histogram
 import jetbrains.letsPlot.lets_plot
-import krangl.*
+import krangl.DoubleCol
+import krangl.NumberCol
 import krangl.typed.TypedDataFrame
 import krangl.typed.TypedDataFrameRow
 import krangl.typed.tracking.trackColumnAccess
@@ -19,7 +20,7 @@ fun <T> TypedDataFrame<T>.plot(body: PlotBuilder<TypedDataFrameRow<T>>.() -> Uni
 
 fun NumberCol.histogram() = lets_plot(mapOf(name to this.values().toList())) + geom_histogram()
 fun DoubleCol.histogram() = lets_plot(mapOf(name to this.values.toList())) + geom_histogram()
-fun NumberCol.bars() = lets_plot(mapOf(name to this.values().toList())) + geom_bar {x = name }
+fun NumberCol.bars() = lets_plot(mapOf(name to this.values().toList())) + geom_bar { x = name }
 fun DoubleCol.bars() = lets_plot(mapOf(name to this.values().toList())) + geom_bar { x = name }
 
 fun <T> TypedDataFrame<T>.plotBars(body: BarsLayer<TypedDataFrameRow<T>>.() -> Unit) = plot {
@@ -54,14 +55,14 @@ fun <T> TypedDataFrame<T>.plotLine(body: LinesLayer<TypedDataFrameRow<T>>.() -> 
     line(body)
 }
 
-class DataFrameNameProvider: MappingNameProvider{
+class DataFrameNameProvider : MappingNameProvider {
 
     private val defaultProvider = DefaultMappingNameProvider()
 
     override fun <T> getName(data: Iterable<T>, mapping: Mapping<T>, propertyName: String) =
             data.firstOrNull()?.let {
                 val columns = trackColumnAccess { mapping(it, it) }
-                if(columns.isEmpty()) defaultProvider.getName(data, mapping, propertyName)
+                if (columns.isEmpty()) defaultProvider.getName(data, mapping, propertyName)
                 else columns.joinToString()
             } ?: defaultProvider.getName(data, mapping, propertyName)
 }

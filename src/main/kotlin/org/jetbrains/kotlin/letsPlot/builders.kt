@@ -37,8 +37,8 @@ open class BuilderBase<T>(val bindings: DataBindings<T>) {
                     .filterNonNullValues()
 
     private fun collectMappings() =
-            properties.mapValues {prop ->
-                prop.value.mapping?.let{ bindings.getDataName(it, prop.key) }
+            properties.mapValues { prop ->
+                prop.value.mapping?.let { bindings.getDataName(it, prop.key) }
             }.filterNonNullValues()
 
 }

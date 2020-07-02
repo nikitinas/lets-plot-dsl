@@ -14,7 +14,7 @@ interface BindingsManager {
     fun <T> getBindings(data: Iterable<T>): DataBindings<T>
 }
 
-interface DataBindings<T>: BindingsManager {
+interface DataBindings<T> : BindingsManager {
 
     val dataForSpec: Map<String, List<Any?>>
 
@@ -46,7 +46,7 @@ class DataBindingsImpl<T>(override val data: Iterable<T>, private val owner: Bin
     override fun makeUnique(name: String): String {
         var res = name
         var counter = 2
-        while(names.containsValue(res))
+        while (names.containsValue(res))
             res = name + " (${counter++})"
         return res
     }
