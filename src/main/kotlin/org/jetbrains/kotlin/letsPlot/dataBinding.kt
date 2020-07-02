@@ -9,25 +9,41 @@ interface MappingNameProvider {
     fun <T> getName(data: Iterable<T>, mapping: Mapping<T>, propertyName: String): String
 }
 
+interface BindingsManager {
+
+    fun <T> getBindings(data: Iterable<T>): DataBindings<T>
+}
+
+interface DataBindings<T>: BindingsManager {
+
+    val dataSource: Map<String, List<Any?>>
+
+    val data: Iterable<T>
+
+    fun makeUnique(name: String): String
+
+    fun getDataName(mapping: Mapping<T>, propertyName: String): String
+}
+
 class DefaultMappingNameProvider : MappingNameProvider {
 
     override fun <T> getName(data: Iterable<T>, mapping: Mapping<T>, propertyName: String) = propertyName
 }
 
-class BindingsManager(private val nameProvider: MappingNameProvider) {
+class BindingsManagerImpl(private val nameProvider: MappingNameProvider) : BindingsManager {
 
-    private val bindingsMap = mutableMapOf<Iterable<*>, DataBindings<*>>()
+    private val bindingsMap = mutableMapOf<Iterable<*>, DataBindingsImpl<*>>()
 
-    fun <T> getBindings(data: Iterable<T>) =
-            bindingsMap.getOrPut(data, { DataBindings(data, this, nameProvider) }) as DataBindings<T>
+    override fun <T> getBindings(data: Iterable<T>) =
+            bindingsMap.getOrPut(data, { DataBindingsImpl(data, this, nameProvider) }) as DataBindings<T>
 
 }
 
-class DataBindings<T>(val data: Iterable<T>, private val owner: BindingsManager, private val nameProvider: MappingNameProvider) {
+class DataBindingsImpl<T>(override val data: Iterable<T>, private val owner: BindingsManagerImpl, private val nameProvider: MappingNameProvider) : DataBindings<T> {
 
     private val names = mutableMapOf<Mapping<T>, String>()
 
-    private fun makeUnique(name: String): String {
+    override fun makeUnique(name: String): String {
         var res = name
         var counter = 2
         while(names.containsValue(res))
@@ -35,11 +51,11 @@ class DataBindings<T>(val data: Iterable<T>, private val owner: BindingsManager,
         return res
     }
 
-    fun getDataName(mapping: Mapping<T>, propertyName: String) = names.getOrPut(mapping) { nameProvider.getName(data, mapping, propertyName).let(::makeUnique) }
+    override fun getDataName(mapping: Mapping<T>, propertyName: String) = names.getOrPut(mapping) { nameProvider.getName(data, mapping, propertyName).let(::makeUnique) }
 
-    fun <C> getManager(values: Iterable<C>) = owner.getBindings(values)
+    override fun <C> getBindings(values: Iterable<C>) = owner.getBindings(values)
 
-    val dataSource by lazy {
+    override val dataSource by lazy {
         names.map { it.value to data.map { v -> it.key(v, v) } }.toMap()
     }
 }

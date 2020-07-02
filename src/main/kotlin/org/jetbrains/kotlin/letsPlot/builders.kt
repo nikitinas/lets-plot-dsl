@@ -71,7 +71,7 @@ class PlotBuilder<T>(data: DataBindings<T>) : GenericBuilder<T>(data) {
         body(builder)
     }
 
-    internal fun <C> createContext(data: Iterable<C>) = LayerContext<C>(bindings.getManager(data), this)
+    internal fun <C> createContext(data: Iterable<C>) = LayerContext<C>(bindings.getBindings(data), this)
 
     private fun collectLayers() = if (layers.isNotEmpty()) layers
     else if (x.isInitialized && y.isInitialized) listOf(PointsLayer(createContext(data)))

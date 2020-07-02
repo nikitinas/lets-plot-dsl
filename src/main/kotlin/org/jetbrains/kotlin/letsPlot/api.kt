@@ -5,7 +5,7 @@ data class PlotSpec(val spec: MutableMap<String, Any>)
 fun <T> Iterable<T>.plot(body: PlotBuilder<T>.() -> Unit) = plot(DefaultMappingNameProvider(), body)
 
 fun <T> Iterable<T>.plot(nameProvider: MappingNameProvider, body: PlotBuilder<T>.() -> Unit): PlotSpec {
-    val bindings = BindingsManager(nameProvider)
+    val bindings = BindingsManagerImpl(nameProvider)
     val builder = PlotBuilder(bindings.getBindings(this))
     body(builder)
     return PlotSpec(builder.getSpec().toMutableMap())
