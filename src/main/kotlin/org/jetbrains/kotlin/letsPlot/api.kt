@@ -6,7 +6,7 @@ fun <T> Iterable<T>.plot(body: PlotBuilder<T>.() -> Unit) = plot(DefaultMappingN
 
 fun <T> Iterable<T>.plot(nameProvider: MappingNameProvider, body: PlotBuilder<T>.() -> Unit): PlotSpec {
     val bindings = BindingsManager(nameProvider)
-    val builder = PlotBuilder(bindings.getManager(this))
+    val builder = PlotBuilder(bindings.getBindings(this))
     body(builder)
     return PlotSpec(builder.getSpec().toMutableMap())
 }

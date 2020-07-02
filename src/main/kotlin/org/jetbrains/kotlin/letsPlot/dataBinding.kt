@@ -18,7 +18,7 @@ class BindingsManager(private val nameProvider: MappingNameProvider) {
 
     private val bindingsMap = mutableMapOf<Iterable<*>, DataBindings<*>>()
 
-    fun <T> getManager(data: Iterable<T>) =
+    fun <T> getBindings(data: Iterable<T>) =
             bindingsMap.getOrPut(data, { DataBindings(data, this, nameProvider) }) as DataBindings<T>
 
 }
@@ -37,7 +37,7 @@ class DataBindings<T>(val data: Iterable<T>, private val owner: BindingsManager,
 
     fun getDataName(mapping: Mapping<T>, propertyName: String) = names.getOrPut(mapping) { nameProvider.getName(data, mapping, propertyName).let(::makeUnique) }
 
-    fun <C> getManager(values: Iterable<C>) = owner.getManager(values)
+    fun <C> getManager(values: Iterable<C>) = owner.getBindings(values)
 
     val dataSource by lazy {
         names.map { it.value to data.map { v -> it.key(v, v) } }.toMap()
