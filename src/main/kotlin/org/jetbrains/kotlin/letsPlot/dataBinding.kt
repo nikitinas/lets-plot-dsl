@@ -16,7 +16,7 @@ interface BindingsManager {
 
 interface DataBindings<T>: BindingsManager {
 
-    val dataSource: Map<String, List<Any?>>
+    val dataForSpec: Map<String, List<Any?>>
 
     val data: Iterable<T>
 
@@ -55,7 +55,7 @@ class DataBindingsImpl<T>(override val data: Iterable<T>, private val owner: Bin
 
     override fun <C> getBindings(values: Iterable<C>) = owner.getBindings(values)
 
-    override val dataSource by lazy {
+    override val dataForSpec by lazy {
         names.map { it.value to data.map { v -> it.key(v, v) } }.toMap()
     }
 }

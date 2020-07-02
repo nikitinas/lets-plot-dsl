@@ -81,7 +81,7 @@ class PlotBuilder<T>(data: DataBindings<T>) : GenericBuilder<T>(data) {
     override fun getSpec() = (super.getSpec() + mapOf(
             Option.Meta.KIND to Option.Meta.Kind.PLOT,
             Option.Plot.LAYERS to collectLayers().map { it.getSpec() },
-            Option.Plot.DATA to bindings.dataSource,
+            Option.Plot.DATA to bindings.dataForSpec,
             Option.Plot.SCALES to (collectScales() + otherScales).map { it.toSpec() }
     ) + otherFeatures.map { it.kind to it.toSpec() }).let {
         postProcessors.fold(it) { spec, processor -> processor.process(spec) }
@@ -110,7 +110,7 @@ open class LayerBuilder<T>(
                     Option.Layer.STAT to stat.kind.optionName(),
                     Option.Layer.POS to position.kind.optionName()
             ) + stat.parameters.map).let {
-        if (bindings.data != plot.bindings.data) it + (Option.Plot.DATA to bindings.dataSource)
+        if (bindings.data != plot.bindings.data) it + (Option.Plot.DATA to bindings.dataForSpec)
         else it
     }
 
