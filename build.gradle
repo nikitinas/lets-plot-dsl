@@ -39,7 +39,7 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib"
     compile "org.jetbrains.kotlin:kotlin-reflect"
 
-    compile 'org.jetbrains.kotlin:krangl-typed:0.0.6-dev-11'
+    compile 'org.jetbrains.kotlin:krangl-typed:0.0.6-dev-12'
 
     compile 'org.jetbrains.lets-plot:lets-plot-common:1.1.2-SNAPSHOT'
     compile 'org.jetbrains.lets-plot:lets-plot-kotlin-api:0.0.10-SNAPSHOT'
