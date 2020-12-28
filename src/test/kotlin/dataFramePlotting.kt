@@ -1,14 +1,8 @@
 import io.kotlintest.shouldBe
 import jetbrains.datalore.plot.config.Option
-import krangl.IntCol
-import krangl.StringCol
-import krangl.dataFrameOf
-import krangl.typed.DataFrameType
-import krangl.typed.TypedDataFrame
-import krangl.typed.TypedDataFrameRow
-import krangl.typed.typed
-import org.jetbrains.kotlin.letsPlot.invoke
-import org.jetbrains.kotlin.letsPlot.plotPoints
+import org.jetbrains.dataframe.*
+import org.jetbrains.dataframe.api.columns.*
+import org.jetbrains.kotlin.letsPlot.*
 import org.junit.Test
 
 class dataFramePlotting(){
@@ -27,10 +21,10 @@ class dataFramePlotting(){
         val age: Int
     }
 
-    val TypedDataFrameRow<Person>.name get() = this["name"] as String
-    val TypedDataFrameRow<Person>.age get() = this["age"] as Int
-    val TypedDataFrame<Person>.name get() = this["name"] as StringCol
-    val TypedDataFrame<Person>.age get() = this["age"] as IntCol
+    val DataRow<Person>.name @JvmName("name_row") get() = this["name"] as String
+    val DataRow<Person>.age @JvmName("age_row") get() = this["age"] as Int
+    val DataFrame<Person>.name get() = this["name"] as ColumnData<String>
+    val DataFrame<Person>.age get() = this["age"] as ColumnData<Int>
 
     val typed = df.typed<Person>()
 
