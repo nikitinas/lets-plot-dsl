@@ -74,7 +74,7 @@ class ScaleableProperty<C, T>(name: String, val aes: Aes<*>) : BindableProperty<
             expand: Any? = null,
             na_value: Any? = null,
             guide: Any? = null,
-            trans: Any? = null) {
+            trans: String? = null) {
         scale = Scale(
                 aes,
                 name, breaks, labels, limits, expand, na_value, guide, trans,
@@ -99,7 +99,7 @@ class ScaleableProperty<C, T>(name: String, val aes: Aes<*>) : BindableProperty<
             expand: Any? = null,
             na_value: Any? = null,
             guide: Any? = null,
-            trans: Any? = null
+            trans: String? = null
     ) {
         scale = Scale(
                 aes,
@@ -124,7 +124,7 @@ class ScaleableProperty<C, T>(name: String, val aes: Aes<*>) : BindableProperty<
             expand: Any? = null,
             na_value: Any? = null,
             guide: Any? = null,
-            trans: Any? = null
+            trans: String? = null
     ) {
         scale = Scale(
                 aes,
@@ -148,7 +148,7 @@ class ScaleableProperty<C, T>(name: String, val aes: Aes<*>) : BindableProperty<
             expand: Any? = null,
             na_value: Any? = null,
             guide: Any? = null,
-            trans: Any? = null
+            trans: String? = null
     ) {
         scale = Scale(
                 aes,

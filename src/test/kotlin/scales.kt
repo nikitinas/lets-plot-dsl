@@ -38,7 +38,7 @@ class scales {
             y{it*it}
         }.spec
 
-        val data = spec[Option.Plot.DATA] as Map<String, List<Any>>
+        val data = spec[Option.PlotBase.DATA] as Map<String, List<Any>>
         data.keys.sorted() shouldBe listOf("x", "y")
     }
 }

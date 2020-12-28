@@ -41,7 +41,7 @@ class dataFramePlotting(){
             y {age}
             fill { "$name ($age)"}
         }
-        val data = res.spec[Option.Plot.DATA] as Map<String, List<Any>>
+        val data = res.spec[Option.PlotBase.DATA] as Map<String, List<Any>>
         data.keys.sorted() shouldBe listOf("age", "name", "name, age")
     }
 }

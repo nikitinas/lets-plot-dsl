@@ -30,7 +30,7 @@ open class BuilderBase<T>(val bindings: DataBindings<T>) {
 
     fun <P> map(selector: Getter<T, P>) = selector
 
-    internal open fun getSpec(): Map<String, Any> = collectParameters() + (Option.Plot.MAPPING to collectMappings())
+    internal open fun getSpec(): Map<String, Any> = collectParameters() + (Option.PlotBase.MAPPING to collectMappings())
 
     private fun collectParameters() =
             properties.mapValues { (it.value as? WriteableProperty<T, *>)?.constValue }
@@ -56,7 +56,7 @@ class PlotBuilder<T>(data: DataBindings<T>) : GenericBuilder<T>(data) {
 
     private val layers = mutableListOf<BuilderBase<*>>()
 
-    private val otherFeatures = mutableListOf<OtherPlotFeature>()
+    private val otherFeatures = mutableListOf<OptionsMap>()
 
     private val otherScales = mutableListOf<Scale>()
 
@@ -81,13 +81,13 @@ class PlotBuilder<T>(data: DataBindings<T>) : GenericBuilder<T>(data) {
     override fun getSpec() = (super.getSpec() + mapOf(
             Option.Meta.KIND to Option.Meta.Kind.PLOT,
             Option.Plot.LAYERS to collectLayers().map { it.getSpec() },
-            Option.Plot.DATA to bindings.dataForSpec,
+            Option.PlotBase.DATA to bindings.dataForSpec,
             Option.Plot.SCALES to (collectScales() + otherScales).map { it.toSpec() }
     ) + otherFeatures.map { it.kind to it.toSpec() }).let {
         postProcessors.fold(it) { spec, processor -> processor.process(spec) }
     }
 
-    operator fun OtherPlotFeature.unaryPlus() {
+    operator fun OptionsMap.unaryPlus() {
         otherFeatures.add(this)
     }
 
@@ -110,7 +110,7 @@ open class LayerBuilder<T>(
                     Option.Layer.STAT to stat.kind.optionName(),
                     Option.Layer.POS to position.kind.optionName()
             ) + stat.parameters.map).let {
-        if (bindings.data != plot.bindings.data) it + (Option.Plot.DATA to bindings.dataForSpec)
+        if (bindings.data != plot.bindings.data) it + (Option.PlotBase.DATA to bindings.dataForSpec)
         else it
     }
 

@@ -15,11 +15,11 @@ interface SpecPostProcessor {
 
 class BarsStatPostProcessor : SpecPostProcessor {
     override fun process(spec: Map<String, Any>): Map<String, Any> {
-        val generalYMapping = (spec[Option.Plot.MAPPING] as? Map<String, String>)?.get(Aes.Y.name)
+        val generalYMapping = (spec[Option.PlotBase.MAPPING] as? Map<String, String>)?.get(Aes.Y.name)
         val newLayers = (spec[Option.Plot.LAYERS] as? List<Map<String, Any>>)?.map {
             val geom = it[Option.Layer.GEOM] as? String
             if (geom != null && geom == GeomKind.BAR.optionName()) {
-                val yMapping = (it[Option.Plot.MAPPING] as? Map<String, String>)?.get(Aes.Y.name)
+                val yMapping = (it[Option.PlotBase.MAPPING] as? Map<String, String>)?.get(Aes.Y.name)
                 val stat = it[Option.Layer.STAT] as? String
                 if (yMapping == null && generalYMapping == null && (stat == null || stat == StatKind.IDENTITY.optionName())) {
                     val layer = it + mapOf(Option.Layer.STAT to StatKind.COUNT.optionName())
@@ -33,7 +33,7 @@ class BarsStatPostProcessor : SpecPostProcessor {
 
 class DateTimeAxisPostProcessor : SpecPostProcessor {
     override fun process(spec: Map<String, Any>): Map<String, Any> {
-        val data = spec[Option.Plot.DATA] as? Map<String, List<Any?>> ?: return spec
+        val data = spec[Option.PlotBase.DATA] as? Map<String, List<Any?>> ?: return spec
         val timeLists = mutableListOf<String>()
         val newData = data.map { (name, values) ->
             val newValues: List<Any?> = when (values.firstOrNull()) {
@@ -48,7 +48,7 @@ class DateTimeAxisPostProcessor : SpecPostProcessor {
         }.toMap()
 
         val timeAeses = ((spec[Option.Plot.LAYERS] as List<Map<String, Any>>) + spec)
-                .mapNotNull { it[Option.Plot.MAPPING] as? Map<String, String> }
+                .mapNotNull { it[Option.PlotBase.MAPPING] as? Map<String, String> }
                 .flatMap {
                     it.mapNotNull {
                         if (timeLists.contains(it.value)) it.key else null
@@ -61,6 +61,6 @@ class DateTimeAxisPostProcessor : SpecPostProcessor {
             s[Option.Scale.DATE_TIME] = true
             s
         }
-        return spec + mapOf(Option.Plot.DATA to newData, Option.Plot.SCALES to newScales)
+        return spec + mapOf(Option.PlotBase.DATA to newData, Option.Plot.SCALES to newScales)
     }
 }

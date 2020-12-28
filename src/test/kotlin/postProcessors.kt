@@ -61,7 +61,7 @@ class postProcessors{
         scales[1][Option.Scale.AES] shouldBe "fill"
         scales[2][Option.Scale.DATE_TIME] shouldBe true
         scales[2][Option.Scale.AES] shouldBe "x"
-        val data = plot.spec[Option.Plot.DATA] as Map<String, List<Any>>
+        val data = plot.spec[Option.PlotBase.DATA] as Map<String, List<Any>>
         data.size shouldBe 3
         val x = data["x"] as List<Long>
         val zoneOffset = OffsetDateTime.now().offset
