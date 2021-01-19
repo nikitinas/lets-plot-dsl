@@ -39,7 +39,7 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib"
     compile "org.jetbrains.kotlin:kotlin-reflect"
 
-    compile 'org.jetbrains.kotlin:dataframe:0.0.8-dev-64'
+    compile 'org.jetbrains.kotlin:dataframe:0.0.8-dev-82'
 
     compile 'org.jetbrains.lets-plot:lets-plot-common:1.5.4'
     compile 'org.jetbrains.lets-plot-kotlin:lets-plot-kotlin-api-kernel:1.1.0'
@@ -94,7 +94,7 @@ dokka {
 }
 
 group 'org.jetbrains.kotlin'
-version '0.0.10-dev-16'
+version '0.0.10-dev-17'
 
 artifacts {
     archives sourcesJar
