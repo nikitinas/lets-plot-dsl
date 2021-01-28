@@ -4,7 +4,6 @@ buildscript {
 
     repositories {
         maven { url 'https://dl.bintray.com/kotlin/dokka' }
-        mavenCentral()
     }
 
     dependencies {
@@ -13,16 +12,18 @@ buildscript {
     }
 }
 
-
-
-
-plugins { id "com.jfrog.bintray" version "1.8.1" }
+plugins {
+    id "com.jfrog.bintray" version "1.8.1"
+    id "org.jetbrains.kotlin.jvm" version "$kotlin_version"
+    id "org.jetbrains.kotlinx.jupyter.api.plugin"
+}
 
 apply plugin: 'kotlin'
 apply plugin: 'org.jetbrains.dokka'
 apply plugin: 'application'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
+apply plugin: 'org.jetbrains.kotlinx.jupyter.api.plugin'
 
 // not neeeded but does not work without
 mainClassName = "foo.Bar" // not needed but does not work without
@@ -44,6 +45,10 @@ dependencies {
     compile 'org.jetbrains.lets-plot:lets-plot-common:1.5.4'
     compile 'org.jetbrains.lets-plot-kotlin:lets-plot-kotlin-api-kernel:1.1.0'
 
+    implementation "org.jetbrains.kotlin:kotlin-stdlib"
+    implementation "org.jetbrains.kotlin:kotlin-reflect"
+    compileOnly("org.jetbrains.kotlinx.jupyter:kotlin-jupyter-api:$jupyterApiVersion")
+
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile 'io.kotlintest:kotlintest-assertions:3.1.6'
     testCompile 'de.mpicbg.scicomp:kutils:0.11'
@@ -54,6 +59,15 @@ dependencies {
 
 }
 
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+processJupyterApiResources {
+    libraryProducers = ["org.my.lib.Integration"]
+}
 
 // see https://github.com/Kotlin/dokka/issues/42
 task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
@@ -77,24 +91,8 @@ task sourcesJar(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource
 }
 
-//Minimal dokka configuration:
-dokka {
-    outputFormat = 'html'
-//    outputDirectory = "$buildDir/javadoc"
-    outputDirectory = "$projectDir/javadoc"
-
-//    sourceDirs = files('src/test/kotlin')
-    samples = ['src/test/kotlin/krangl/samples']
-
-    // Emit warnings about not documented members. Applies globally, also can be overridden by packageOptions
-    reportUndocumented = false
-
-//    http://kotlinlang.org/docs/reference/kotlin-doc.html#module-and-package-documentation
-    includes = ['docs/packages_info.md']
-}
-
 group 'org.jetbrains.kotlin'
-version '0.0.10-dev-19'
+version '0.0.10-dev-20'
 
 artifacts {
     archives sourcesJar
