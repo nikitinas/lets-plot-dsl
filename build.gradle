@@ -40,7 +40,7 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib"
     compile "org.jetbrains.kotlin:kotlin-reflect"
 
-    compile 'org.jetbrains.kotlin:dataframe:0.0.8-dev-88'
+    compile 'org.jetbrains.kotlin:dataframe:0.0.8-dev-89'
 
     compile 'org.jetbrains.lets-plot:lets-plot-common:1.5.4'
     compile 'org.jetbrains.lets-plot-kotlin:lets-plot-kotlin-api-kernel:1.1.0'
@@ -66,7 +66,7 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
 }
 
 processJupyterApiResources {
-    libraryProducers = ["org.my.lib.Integration"]
+    libraryProducers = ["org.jetbrains.kotlin.letsPlot.jupyter.Integration"]
 }
 
 // see https://github.com/Kotlin/dokka/issues/42
@@ -92,7 +92,7 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 }
 
 group 'org.jetbrains.kotlin'
-version '0.0.10-dev-20'
+version '0.0.10-dev-22'
 
 artifacts {
     archives sourcesJar
