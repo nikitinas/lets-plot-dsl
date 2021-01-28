@@ -15,7 +15,7 @@ class dataFramePlotting(){
 
     // Generated code
 
-    @DataFrameType
+    @DataSchema
     interface Person {
         val name: String
         val age: Int
@@ -23,8 +23,8 @@ class dataFramePlotting(){
 
     val DataRow<Person>.name @JvmName("name_row") get() = this["name"] as String
     val DataRow<Person>.age @JvmName("age_row") get() = this["age"] as Int
-    val DataFrame<Person>.name get() = this["name"] as ColumnData<String>
-    val DataFrame<Person>.age get() = this["age"] as ColumnData<Int>
+    val DataFrame<Person>.name get() = this["name"] as DataColumn<String>
+    val DataFrame<Person>.age get() = this["age"] as DataColumn<Int>
 
     val typed = df.typed<Person>()
 

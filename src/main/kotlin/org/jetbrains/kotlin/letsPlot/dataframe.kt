@@ -1,10 +1,10 @@
 package org.jetbrains.kotlin.letsPlot
 
-import org.jetbrains.dataframe.*
 import jetbrains.letsPlot.geom.geom_bar
 import jetbrains.letsPlot.geom.geom_histogram
 import jetbrains.letsPlot.lets_plot
-import org.jetbrains.dataframe.api.columns.ColumnData
+import org.jetbrains.dataframe.*
+import org.jetbrains.dataframe.api.columns.DataColumn
 import org.jetbrains.dataframe.impl.trackColumnAccess
 
 fun <T> PlotBuilder<*>.line(data: DataFrame<T>, body: LinesLayer<DataRow<T>>.() -> Unit) = line(data.rows(), body)
@@ -16,8 +16,8 @@ fun <T> PlotBuilder<*>.area(data: DataFrame<T>, body: AreaLayer<DataRow<T>>.() -
 fun <T> PlotBuilder<*>.density(data: DataFrame<T>, body: DensityLayer<DataRow<T>>.() -> Unit) = density(data.rows(), body)
 fun <T> DataFrame<T>.plot(body: PlotBuilder<DataRow<T>>.() -> Unit) = rows().plot(DataFrameNameProvider(), body)
 
-fun <T:Number> ColumnData<T>.histogram() = lets_plot(mapOf(name() to this.toList())) + geom_histogram()
-fun <T:Number> ColumnData<T>.bars() = lets_plot(mapOf(name() to this.toList())) + geom_bar { x = name() }
+fun <T:Number> DataColumn<T>.histogram() = lets_plot(mapOf(name() to this.toList())) + geom_histogram()
+fun <T:Number> DataColumn<T>.bars() = lets_plot(mapOf(name() to this.toList())) + geom_bar { x = name() }
 
 fun <T> DataFrame<T>.plotBars(body: BarsLayer<DataRow<T>>.() -> Unit) = plot {
     bars(body)
