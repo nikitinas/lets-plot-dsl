@@ -8,10 +8,12 @@ import jetbrains.letsPlot.intern.Plot
 import org.jetbrains.kotlin.letsPlot.PlotSpec
 import org.jetbrains.kotlinx.jupyter.api.HTML
 import org.jetbrains.kotlinx.jupyter.api.Notebook
+import org.jetbrains.kotlinx.jupyter.api.annotations.JupyterLibrary
 import org.jetbrains.kotlinx.jupyter.api.libraries.JupyterIntegration
 
+@JupyterLibrary
 class Integration : JupyterIntegration() {
-    override fun Builder.onLoaded(notebook: Notebook<*>?) {
+    override fun Builder.onLoaded(notebook: Notebook?) {
         import("jetbrains.letsPlot.*",
             "jetbrains.letsPlot.geom.*",
             "jetbrains.letsPlot.stat.*",

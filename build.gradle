@@ -1,9 +1,9 @@
 buildscript {
-    ext.kotlin_version = '1.3.50'
-    ext.dokka_version = '0.9.17'
 
     repositories {
         maven { url 'https://dl.bintray.com/kotlin/dokka' }
+        maven { url 'https://kotlin.bintray.com/kotlin-datascience' }
+        mavenCentral()
     }
 
     dependencies {
@@ -15,7 +15,7 @@ buildscript {
 plugins {
     id "com.jfrog.bintray" version "1.8.1"
     id "org.jetbrains.kotlin.jvm" version "$kotlin_version"
-    id "org.jetbrains.kotlinx.jupyter.api.plugin"
+    id "org.jetbrains.kotlin.jupyter.api" version "$jupyterApiVersion"
 }
 
 apply plugin: 'kotlin'
@@ -23,39 +23,24 @@ apply plugin: 'org.jetbrains.dokka'
 apply plugin: 'application'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
-apply plugin: 'org.jetbrains.kotlinx.jupyter.api.plugin'
 
 // not neeeded but does not work without
 mainClassName = "foo.Bar" // not needed but does not work without
 
 repositories {
-    mavenCentral()
-//    mavenLocal()
     jcenter()
     maven { url 'https://jetbrains.bintray.com/lets-plot-maven'}
-    maven { url 'https://kotlin.bintray.com/kotlin-datascience' }
 }
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib"
-    compile "org.jetbrains.kotlin:kotlin-reflect"
 
-    compile 'org.jetbrains.kotlin:dataframe:0.0.8-dev-89'
+    compile "org.jetbrains.kotlin:dataframe:$dataframe_version"
 
     compile 'org.jetbrains.lets-plot:lets-plot-common:1.5.4'
     compile 'org.jetbrains.lets-plot-kotlin:lets-plot-kotlin-api-kernel:1.1.0'
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib"
-    implementation "org.jetbrains.kotlin:kotlin-reflect"
-    compileOnly("org.jetbrains.kotlinx.jupyter:kotlin-jupyter-api:$jupyterApiVersion")
-
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile 'io.kotlintest:kotlintest-assertions:3.1.6'
-    testCompile 'de.mpicbg.scicomp:kutils:0.11'
-
-
-    // needed to work around https://youtrack.jetbrains.com/issue/KT-15064
-    compileOnly "org.jetbrains.kotlin:kotlin-script-runtime:$kotlin_version"
 
 }
 
@@ -65,26 +50,6 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
     }
 }
 
-processJupyterApiResources {
-    libraryProducers = ["org.jetbrains.kotlin.letsPlot.jupyter.Integration"]
-}
-
-// see https://github.com/Kotlin/dokka/issues/42
-task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
-    outputFormat = 'javadoc'
-    outputDirectory = javadoc.destinationDir
-
-    reportUndocumented = false
-    samples = ['src/test/kotlin/krangl/samples']
-
-    inputs.dir 'src/main/kotlin'
-}
-
-task javadocJar(type: Jar, dependsOn: dokkaJavadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
 // http://stackoverflow.com/questions/11474729/how-to-build-sources-jar-with-gradle
 task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'
@@ -92,7 +57,7 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 }
 
 group 'org.jetbrains.kotlin'
-version '0.0.10-dev-22'
+version property('version')
 
 artifacts {
     archives sourcesJar
