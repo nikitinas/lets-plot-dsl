@@ -42,9 +42,6 @@ tasks.withType<JavaCompile> {
     targetCompatibility = JavaVersion.VERSION_1_8.toString()
 }
 
-group  = "org.jetbrains.kotlinx"
-
-
 fun detectVersion(): String {
     val buildNumber = rootProject.findProperty("build.number") as? String
     val defaultVersion = property("version").toString()
@@ -69,6 +66,7 @@ val detectVersionForTC: Task by tasks.creating {
     }
 }
 
+group  = "org.jetbrains.kotlinx"
 version = detectVersion()
 
 kotlinPublications {
