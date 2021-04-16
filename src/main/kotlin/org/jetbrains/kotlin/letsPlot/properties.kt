@@ -73,11 +73,12 @@ class ScaleableProperty<C, T>(name: String, val aes: Aes<*>) : BindableProperty<
             limits: List<Any>? = null,
             expand: Any? = null,
             na_value: Any? = null,
+            format: String? = null,
             guide: Any? = null,
             trans: String? = null) {
         scale = Scale(
                 aes,
-                name, breaks, labels, limits, expand, na_value, guide, trans,
+                name, breaks, labels, limits, expand, na_value, format, guide, trans,
                 Options(
                         mapOf(
                                 Option.Scale.HUE_RANGE to h,
@@ -98,12 +99,13 @@ class ScaleableProperty<C, T>(name: String, val aes: Aes<*>) : BindableProperty<
             limits: List<Any>? = null,
             expand: Any? = null,
             na_value: Any? = null,
+            format: String? = null,
             guide: Any? = null,
             trans: String? = null
     ) {
         scale = Scale(
                 aes,
-                name, breaks, labels, limits, expand, na_value, guide, trans,
+                name, breaks, labels, limits, expand, na_value, format, guide, trans,
                 Options(
                         mapOf(
                                 Option.Scale.START to start,
@@ -123,12 +125,13 @@ class ScaleableProperty<C, T>(name: String, val aes: Aes<*>) : BindableProperty<
             limits: List<Any>? = null,
             expand: Any? = null,
             na_value: Any? = null,
+            format: String? = null,
             guide: Any? = null,
             trans: String? = null
     ) {
         scale = Scale(
                 aes,
-                name, breaks, labels, limits, expand, na_value, guide, trans,
+                name, breaks, labels, limits, expand, na_value, format, guide, trans,
                 Options(
                         mapOf(
                                 Option.Scale.LOW to low,
@@ -147,12 +150,13 @@ class ScaleableProperty<C, T>(name: String, val aes: Aes<*>) : BindableProperty<
             limits: List<Any>? = null,
             expand: Any? = null,
             na_value: Any? = null,
+            format: String? = null,
             guide: Any? = null,
             trans: String? = null
     ) {
         scale = Scale(
                 aes,
-                name, breaks, labels, limits, expand, na_value, guide, trans,
+                name, breaks, labels, limits, expand, na_value, format, guide, trans,
                 Options(
                         mapOf(
                                 Option.Scale.LOW to low,

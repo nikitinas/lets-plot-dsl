@@ -4,7 +4,7 @@ import jetbrains.letsPlot.geom.geom_bar
 import jetbrains.letsPlot.geom.geom_histogram
 import jetbrains.letsPlot.lets_plot
 import org.jetbrains.dataframe.*
-import org.jetbrains.dataframe.api.columns.DataColumn
+import org.jetbrains.dataframe.columns.DataColumn
 import org.jetbrains.dataframe.impl.trackColumnAccess
 
 fun <T> PlotBuilder<*>.line(data: DataFrame<T>, body: LinesLayer<DataRow<T>>.() -> Unit) = line(data.rows(), body)

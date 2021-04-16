@@ -1,11 +1,16 @@
 import io.kotlintest.shouldBe
 import jetbrains.datalore.plot.config.Option
-import org.jetbrains.dataframe.*
-import org.jetbrains.dataframe.api.columns.*
-import org.jetbrains.kotlin.letsPlot.*
+import org.jetbrains.dataframe.DataFrame
+import org.jetbrains.dataframe.DataRow
+import org.jetbrains.dataframe.annotations.DataSchema
+import org.jetbrains.dataframe.columns.DataColumn
+import org.jetbrains.dataframe.dataFrameOf
+import org.jetbrains.dataframe.typed
+import org.jetbrains.kotlin.letsPlot.invoke
+import org.jetbrains.kotlin.letsPlot.plotPoints
 import org.junit.Test
 
-class dataFramePlotting(){
+class DataFramePlotting {
 
     val df = dataFrameOf("name", "age")(
             "Alice", 31,
