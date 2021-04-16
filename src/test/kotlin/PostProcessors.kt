@@ -8,7 +8,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.OffsetDateTime
 
-class postProcessors{
+class PostProcessors {
 
     fun PlotSpec.testBarsStat(statKind: StatKind){
         val layers = (spec[Option.Plot.LAYERS] as List<Map<String, Any>>)

@@ -7,7 +7,7 @@ import org.jetbrains.kotlin.letsPlot.plot
 import org.jetbrains.kotlin.letsPlot.plotLine
 import org.junit.Test
 
-class scales {
+class Scales {
 
     @Test
     fun `hue`(){

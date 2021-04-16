@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.letsPlot.plotLine
 import org.jetbrains.kotlin.letsPlot.plotY
 import org.junit.Test
 
-class simplePlotting{
+class SimplePlotting{
 
     @Test
     fun `plotY`(){
