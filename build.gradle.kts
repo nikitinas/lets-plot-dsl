@@ -27,6 +27,8 @@ dependencies {
     implementation("org.jetbrains.lets-plot:lets-plot-image-export:$letsPlotLibVersion")
     implementation("org.jetbrains.lets-plot:lets-plot-kotlin-api-kernel:$letsPlotApiVersion")
 
+    implementation("io.github.microutils:kotlin-logging-jvm:2.0.5")
+
     testImplementation("junit:junit:4.12")
     testImplementation("io.kotlintest:kotlintest-assertions:3.1.6")
 }
