@@ -58,6 +58,8 @@ class PlotBuilder<T>(data: DataBindings<T>) : GenericBuilder<T>(data) {
 
     private val otherFeatures = mutableListOf<OptionsMap>()
 
+    private val otherLayers = mutableListOf<Layer>()
+
     private val otherScales = mutableListOf<Scale>()
 
     private val postProcessors = listOf(DateTimeAxisPostProcessor(), BarsStatPostProcessor())
@@ -80,7 +82,7 @@ class PlotBuilder<T>(data: DataBindings<T>) : GenericBuilder<T>(data) {
 
     override fun getSpec() = (super.getSpec() + mapOf(
             Option.Meta.KIND to Option.Meta.Kind.PLOT,
-            Option.Plot.LAYERS to collectLayers().map { it.getSpec() },
+            Option.Plot.LAYERS to collectLayers().map { it.getSpec() } + otherLayers.map { it.toSpec() },
             Option.PlotBase.DATA to bindings.dataForSpec,
             Option.Plot.SCALES to (collectScales() + otherScales).map { it.toSpec() }
     ) + otherFeatures.map { it.kind to it.toSpec() }).let {
@@ -89,6 +91,10 @@ class PlotBuilder<T>(data: DataBindings<T>) : GenericBuilder<T>(data) {
 
     operator fun OptionsMap.unaryPlus() {
         otherFeatures.add(this)
+    }
+
+    operator fun Layer.unaryPlus() {
+        otherLayers.add(this)
     }
 
     operator fun Scale.unaryPlus() {
@@ -120,5 +126,4 @@ open class LayerBuilder<T>(
     val boxplot get() = Stat.boxplot()
 }
 
-fun PlotBuilder<*>.size(width: Int, height: Int) =
-        +ggsize(width, height)
+fun PlotBuilder<*>.size(width: Int, height: Int) = +ggsize(width, height)
