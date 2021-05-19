@@ -39,7 +39,7 @@ open class BindableProperty<C, T>(val name: String) {
     val isInitialized get() = mapping != null || values != null
 }
 
-class ScaleableProperty<C, T>(name: String, val aes: Aes<*>) : BindableProperty<C, T>(name) {
+class ScaleableProperty<C, T>(name: String, val aes: Aes<*>) : WriteableProperty<C, T>(name) {
 
     var scale: Scale? = null
 
@@ -170,11 +170,9 @@ class ScaleableProperty<C, T>(name: String, val aes: Aes<*>) : BindableProperty<
     }
 }
 
-class WriteableProperty<C, T>(name: String) : BindableProperty<C, T>(name) {
+open class WriteableProperty<C, T>(name: String) : BindableProperty<C, T>(name) {
 
     var constValue: T? = null
-
-    operator fun invoke(value: T) = set(value)
 
     infix fun to(value: T) = set(value)
 

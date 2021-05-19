@@ -16,7 +16,7 @@ fun <T> Iterable<T>.plotBars(body: BarsLayer<T>.() -> Unit) = plot {
 }
 
 fun <T> Iterable<T>.plotPoints(body: PointsLayer<T>.() -> Unit) = plot {
-    points(body)
+    pointsLayer(body)
 }
 
 fun <T> Iterable<T>.plotHistogram(body: HistogramLayer<T>.() -> Unit) = plot {
@@ -40,7 +40,7 @@ fun <T> Iterable<T>.plotHlines(body: HLinesLayer<T>.() -> Unit) = plot {
 }
 
 fun <T> Iterable<T>.plotLine(body: LinesLayer<T>.() -> Unit) = plot {
-    line(body)
+    lineLayer(body)
 }
 
 class XAccessor<T : Number>(val x: T)

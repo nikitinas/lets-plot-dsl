@@ -6,8 +6,7 @@ import org.jetbrains.dataframe.annotations.DataSchema
 import org.jetbrains.dataframe.columns.DataColumn
 import org.jetbrains.dataframe.dataFrameOf
 import org.jetbrains.dataframe.typed
-import org.jetbrains.kotlin.letsPlot.invoke
-import org.jetbrains.kotlin.letsPlot.plotPoints
+import org.jetbrains.kotlin.letsPlot.*
 import org.junit.Test
 
 class DataFramePlotting {
@@ -42,5 +41,17 @@ class DataFramePlotting {
         }
         val data = res.spec[Option.PlotBase.DATA] as Map<String, List<Any>>
         data.keys.sorted() shouldBe listOf("age", "name", "name, age")
+    }
+
+    @Test
+    fun `points and lines`(){
+        val res = typed.plot {
+            x { name }
+            points { age }
+            line("red") { age * 2 }
+            fill { "$name ($age)"}
+        }
+        val data = res.spec[Option.PlotBase.DATA] as Map<String, List<Any>>
+        data.keys.sorted() shouldBe listOf("age", "age (2)", "name", "name, age")
     }
 }

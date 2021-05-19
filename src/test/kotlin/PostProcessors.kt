@@ -31,7 +31,9 @@ class PostProcessors {
         (1..10).plot {
             x { it }
             y { it*2 }
-            bars()
+            bars {
+                color to "red"
+            }
         }.testBarsStat(StatKind.IDENTITY)
     }
 
@@ -50,8 +52,8 @@ class PostProcessors {
         val plot = times.plot {
             x { second }
             y { first }.hue()
-            points{
-                fill{second}
+            pointsLayer {
+                fill { second}
             }
         }
 
