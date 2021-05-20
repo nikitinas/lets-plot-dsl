@@ -43,7 +43,7 @@ class Integration : JupyterIntegration() {
             HTML(frontendContext!!.getHtml(it))
         }
         render<PlotSpec> {
-            HTML(PlotHtmlHelper.getDynamicDisplayHtmlForRawSpec(it.spec))
+            HTML(frontendContext!!.getDisplayHtml(it.spec))
         }
     }
 }
