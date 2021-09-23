@@ -11,6 +11,7 @@ plugins {
 
 repositories {
     mavenCentral()
+    maven(url = "https://jitpack.io")
     maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
 }
 
