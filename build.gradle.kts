@@ -28,10 +28,10 @@ dependencies {
     implementation("org.jetbrains.lets-plot:lets-plot-image-export:$letsPlotLibVersion")
     implementation("org.jetbrains.lets-plot:lets-plot-kotlin-api-kernel:$letsPlotApiVersion")
 
-    implementation("io.github.microutils:kotlin-logging-jvm:2.0.5")
+    implementation("io.github.microutils:kotlin-logging-jvm:2.0.11")
 
-    testImplementation("junit:junit:4.12")
-    testImplementation("io.kotlintest:kotlintest-assertions:3.1.6")
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("io.kotlintest:kotlintest-assertions:3.4.2")
 }
 
 tasks.withType<KotlinCompile> {
@@ -75,6 +75,8 @@ version = detectVersion()
 kotlinPublications {
     fun prop(name: String) = project.findProperty(name) as? String?
 
+    defaultGroup.set("org.jetbrains.kotlinx")
+
     sonatypeSettings(
         prop("kds.sonatype.user"),
         prop("kds.sonatype.password"),
@@ -99,9 +101,9 @@ kotlinPublications {
     }
 
     publication {
-        publicationName = "api"
-        artifactId = "lets-plot-dsl"
-        description = "Kotlin DSL for convenient Lets-Plot usage inside Jupyter Notebooks"
-        packageName = artifactId
+        publicationName.set("api")
+        artifactId.set("lets-plot-dsl")
+        description.set("Kotlin DSL for convenient Lets-Plot usage inside Jupyter Notebooks")
+        packageName.set(artifactId)
     }
 }

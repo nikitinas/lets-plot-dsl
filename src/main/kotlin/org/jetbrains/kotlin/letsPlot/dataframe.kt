@@ -3,9 +3,10 @@ package org.jetbrains.kotlin.letsPlot
 import jetbrains.letsPlot.geom.geomBar
 import jetbrains.letsPlot.geom.geomHistogram
 import jetbrains.letsPlot.letsPlot
-import org.jetbrains.dataframe.*
-import org.jetbrains.dataframe.columns.DataColumn
-import org.jetbrains.dataframe.impl.trackColumnAccess
+import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.impl.trackColumnAccess
 
 fun <T> PlotBuilder<*>.lineLayer(data: DataFrame<T>, body: LinesLayer<DataRow<T>>.() -> Unit) = lineLayer(data.rows(), body)
 fun <T> PlotBuilder<*>.bars(data: DataFrame<T>, body: BarsLayer<DataRow<T>>.() -> Unit) = bars(data.rows(), body)

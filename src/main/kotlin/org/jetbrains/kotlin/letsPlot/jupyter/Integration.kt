@@ -1,6 +1,5 @@
 package org.jetbrains.kotlin.letsPlot.jupyter
 
-import jetbrains.datalore.plot.PlotHtmlHelper
 import jetbrains.letsPlot.GGBunch
 import jetbrains.letsPlot.LetsPlot
 import jetbrains.letsPlot.frontend.NotebookFrontendContext

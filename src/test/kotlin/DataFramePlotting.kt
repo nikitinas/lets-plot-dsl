@@ -1,12 +1,12 @@
 import io.kotlintest.shouldBe
 import jetbrains.datalore.plot.config.Option
-import org.jetbrains.dataframe.DataFrame
-import org.jetbrains.dataframe.DataRow
-import org.jetbrains.dataframe.annotations.DataSchema
-import org.jetbrains.dataframe.columns.DataColumn
-import org.jetbrains.dataframe.dataFrameOf
-import org.jetbrains.dataframe.typed
 import org.jetbrains.kotlin.letsPlot.*
+import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.api.typed
+import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.junit.Test
 
 class DataFramePlotting {
